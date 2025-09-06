@@ -1,0 +1,14 @@
+name: React-Project-CI
+on:
+  push: 
+    branches: 
+      - master
+
+jobs: 
+  build: 
+    runs-on: ubuntu-latest
+    steps: 
+      - uses: actions/checkout@v2
+      - run: docker login -u ${{ secrets.DOCKER_USERNANME }} -p ${{ secrets.DOCKER_PASSSWORD }} 
+      - run: docker build -t eslamnasser100/react-test -f Dockerfile.dev . 
+      - run: docker run -e CI=true eslamnasser100/react-test npm run test 
