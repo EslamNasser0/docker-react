@@ -1,14 +1,32 @@
 name: React-Project-CI
 on:
-  push: 
-    branches: 
+  push:
+    branches:
       - master
 
-jobs: 
-  build: 
+jobs:
+  build:
     runs-on: ubuntu-latest
-    steps: 
-      - uses: actions/checkout@v2
-      - run: docker login -u ${{ secrets.DOCKER_USERNANME }} -p ${{ secrets.DOCKER_PASSSWORD }} 
-      - run: docker build -t eslamnasser100/react-test -f Dockerfile.dev . 
-      - run: docker run -e CI=true eslamnasser100/react-test npm run test 
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Build, Test, and Push Docker Image
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker build -t eslamnasser100/react-test -f Dockerfile.dev .
+          docker run -e CI=true eslamnasser100/react-test npm run test
+
+      - name: Create Deployment Package
+        run: zip -r deploy.zip . -x '*.git*'
+
+      - name: Deploy to Elastic Beanstalk
+        uses: einaregilsson/beanstalk-deploy@v20
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
+          application_name: "react-project"
+          environment_name: "React-project-env"
+          region: "eu-north-1"
+          version_label: ${{ github.sha }}
+          deployment_package: deploy.zip
