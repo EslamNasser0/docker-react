@@ -5,10 +5,9 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Hi There!</h1>
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Edit <code>src/App.js</code> and save to reload.
+          we are now a DEVOPS Engineers    
         </p>
         <a
           className="App-link"
@@ -16,7 +15,7 @@ function App() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Learn React
+          Learn from Gamil
         </a>
       </header>
     </div>
